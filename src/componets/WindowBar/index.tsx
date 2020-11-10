@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { remote } from 'electron'
+import { remote, ipcRenderer } from 'electron'
 
 import { Close, Minimize, Restore, Maxmize } from './Icons'
-
 
 const WindowBar = () => {
 
@@ -15,28 +14,46 @@ const WindowBar = () => {
     }
 
     const handleMaximized = () => {
-        const window = win;
-        window.isMaximized() ? window.unmaximize() : window.maximize();
+        win.isMaximized() ? win.unmaximize() : win.maximize();
+        setMax(win.isMaximized())
     }
 
     const handleClose = () => {
         win.close();
     }
 
-    const toggleMax = () => {
-        setMax(win.isMaximized())
+    const clearHover = () => {
+        document.querySelectorAll('.button').forEach((ell) => {
+            ell.classList.add('clear-hover')
+        })
+
+        document.querySelector('#close-button')?.classList.add('clear-hover')
     }
 
+    const resetHover = () => {
+        document.querySelectorAll('.button').forEach((ell) => {
+            ell.classList.remove('clear-hover')
+        })
+
+        document.querySelector('#close-button')?.classList.remove('clear-hover')
+    }
+
+
     useEffect(() => {
-        win.on('maximize', toggleMax)
-        win.on('unmaximize', toggleMax)
+        
+        win.on('minimize', clearHover)
+        win.on('maximize', clearHover)
+        win.on('unmaximize', clearHover)
+        win.on('restore', clearHover)
 
         return () => {
-            win.removeListener('maximize', toggleMax)
-            win.removeListener('unmaximize', toggleMax)
+            //Clear all listeners when componet destroy
+            win.removeAllListeners('minimize')
+            win.removeAllListeners('maximize')
+            win.removeAllListeners('unmaximize')
+            win.removeAllListeners('restore')
         }
-
-    }, [])
+    })
 
     return (
         <header id="window-bar" >
@@ -44,16 +61,31 @@ const WindowBar = () => {
 
             </div>
             <div id="window-controls">
-                <div className="button" id="min-button" onClick={_ => handleMinimize()}>
+                <div
+                    className="button"
+                    id="min-button"
+                    onClick={_ => handleMinimize()}
+                    onMouseOver={() => resetHover()}
+                >
                     <Minimize />
                 </div>
 
-                <div className="button" id="max-button" onClick={_ => handleMaximized()}>
+                <div
+                    className="button"
+                    id="max-button"
+                    onClick={_ => handleMaximized()}
+                    onMouseOver={() => resetHover()}
+                >
                     {max ? <Restore /> : <Maxmize />}
                 </div>
 
 
-                <div className="button" id="close-button" onClick={_ => handleClose()}>
+                <div
+                    className="button"
+                    id="close-button"
+                    onClick={_ => handleClose()}
+                    onMouseOver={() => resetHover()}
+                >
                     <Close />
                 </div>
 

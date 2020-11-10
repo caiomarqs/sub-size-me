@@ -18,7 +18,14 @@ const createWindow = () => {
 
     })
 
-    
+    // win.on('focus', () => {
+    //     win.webContents.send('browser-window-focus')
+    // })
+
+    // win.on('blur', () => {
+    //     win.webContents.send('browser-window-blur')
+    // })
+
     if (process.env.NODE_ENV === 'development') {
         win.loadURL(`http://localhost:4000`);
     } else {
@@ -36,7 +43,7 @@ const createWindow = () => {
 const startUp = () => {
     app.allowRendererProcessReuse = true
     app.commandLine.appendSwitch('disable-renderer-backgrounding')
-    
+
     app.whenReady().then(createWindow)
     app.on('window-all-closed', () => {
         if (process.platform !== 'darwin') {
