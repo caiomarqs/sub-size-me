@@ -10,8 +10,12 @@ const createWindow = () => {
         frame: false,
         webPreferences: {
             nodeIntegration: true,
-            backgroundThrottling: false
-        }
+            backgroundThrottling: false,
+            enableRemoteModule: true
+        },
+        center: true,
+        backgroundColor: "#161723",
+
     })
 
     
@@ -30,7 +34,7 @@ const createWindow = () => {
 }
 
 const startUp = () => {
-    // app.allowRendererProcessReuse = true
+    app.allowRendererProcessReuse = true
     app.commandLine.appendSwitch('disable-renderer-backgrounding')
     
     app.whenReady().then(createWindow)
