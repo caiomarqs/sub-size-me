@@ -1,0 +1,40 @@
+@mixin noselect() {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+@mixin animation($str) {
+    -webkit-animation: #{$str};
+    -moz-animation: #{$str};
+    -ms-animation: #{$str};
+    -o-animation: #{$str};
+    animation: #{$str};
+}
+
+@mixin filter($str) {
+    -webkit-filter: #{$str};
+    -moz-filter: #{$str};
+    -o-filter: #{$str};
+    -ms-filter: #{$str};
+    filter: #{$str};
+}
+
+@mixin placeholeder-color($str) {
+    &::placeholder {
+        color: #{$str};
+    }
+
+    &:-ms-input-placeholder {
+        color: #{$str};
+    }
+    &:-moz-input-placeholder {
+        color: #{$str};
+    }
+    &:-o-scrollbar {
+        color: #{$str};
+    }
+}

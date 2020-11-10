@@ -7,9 +7,11 @@ const createWindow = () => {
         width: 652,
         height: 600,
         maxWidth: 652,
+        minWidth: 326,
         frame: false,
         webPreferences: {
-            nodeIntegration: true,
+            nodeIntegration: true, 
+            nodeIntegrationInWorker: true,
             backgroundThrottling: false,
             enableRemoteModule: true
         },
@@ -17,14 +19,6 @@ const createWindow = () => {
         backgroundColor: "#161723",
 
     })
-
-    // win.on('focus', () => {
-    //     win.webContents.send('browser-window-focus')
-    // })
-
-    // win.on('blur', () => {
-    //     win.webContents.send('browser-window-blur')
-    // })
 
     if (process.env.NODE_ENV === 'development') {
         win.loadURL(`http://localhost:4000`);
@@ -37,7 +31,6 @@ const createWindow = () => {
             })
         )
     }
-    // win.loadFile('public/index.html')
 }
 
 const startUp = () => {

@@ -1,9 +1,13 @@
-import React, { useEffect, useState } from 'react'
-import { remote, ipcRenderer } from 'electron'
+import React, { useEffect, useState, ReactElement } from 'react'
+import { remote } from 'electron'
 
 import { Close, Minimize, Restore, Maxmize } from './Icons'
 
-const WindowBar = () => {
+interface IWindowBarProps {
+    Icon?: JSX.Element | ReactElement
+}
+
+const WindowBar = ({ Icon, ...props }: React.PropsWithChildren<IWindowBarProps>) => {
 
     const win = remote.getCurrentWindow()
 
@@ -40,12 +44,12 @@ const WindowBar = () => {
 
 
     useEffect(() => {
-        
+
         win.on('minimize', clearHover)
         win.on('maximize', clearHover)
         win.on('unmaximize', clearHover)
         win.on('restore', clearHover)
-
+        console.log(Icon)
         return () => {
             //Clear all listeners when componet destroy
             win.removeAllListeners('minimize')
@@ -58,6 +62,13 @@ const WindowBar = () => {
     return (
         <header id="window-bar" >
             <div id="drag-region">
+                <div id='window-title'>
+                    {
+                        Icon !== undefined
+                            ? Icon
+                            : <span className="window-title">{document.title}</span>
+                    }
+                </div>
 
             </div>
             <div id="window-controls">

@@ -1,10 +1,12 @@
 import React from 'react'
 
+import { UploadArea } from '../componets/UploadArea'
+
 const Principal = () => {
     return (
-        <>
-            <h1>Principal</h1>
-        </>
+        <div id='principal-container'>
+            <UploadArea />
+        </div>
     )
 }
 
