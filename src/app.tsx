@@ -1,9 +1,11 @@
 import React, { useEffect } from 'react';
 import ReactDom from 'react-dom';
 
-import { Home } from './views/Home';
+import { Principal } from './views/Principal';
+import { WindowBar } from './componets/WindowBar'
 
 import './_sass/styles.scss'
+
 
 const mainElement = document.createElement('div');
 document.body.appendChild(mainElement);
@@ -14,7 +16,12 @@ const App = () => {
     document.title = "Sub Size Me"
   ])
 
-  return <Home />
+  return(
+    <>
+      <WindowBar />
+      <Principal />
+    </>
+  )
 }
 
 ReactDom.render(<App />, mainElement);

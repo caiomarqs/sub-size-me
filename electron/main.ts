@@ -9,7 +9,8 @@ const createWindow = () => {
         maxWidth: 652,
         frame: false,
         webPreferences: {
-            nodeIntegration: true
+            nodeIntegration: true,
+            backgroundThrottling: false
         }
     })
 
@@ -29,8 +30,9 @@ const createWindow = () => {
 }
 
 const startUp = () => {
-    app.allowRendererProcessReuse = true
-
+    // app.allowRendererProcessReuse = true
+    app.commandLine.appendSwitch('disable-renderer-backgrounding')
+    
     app.whenReady().then(createWindow)
     app.on('window-all-closed', () => {
         if (process.platform !== 'darwin') {
