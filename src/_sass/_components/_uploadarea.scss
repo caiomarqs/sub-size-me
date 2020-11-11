@@ -1,10 +1,23 @@
 #upload-area{
-
     h1{
         margin: 0;
     }
 
     p{
         color: $B-000;
+    }
+
+    height:  16rem;
+    background-color: $primary;
+
+    #file-region-input{
+        display: none;
+    }
+
+    .file-region{
+        width: 100%;
+        height: 100%;
+        display: block;
+        background-color: rgba($color: #000000, $alpha: .5);
     }
 }

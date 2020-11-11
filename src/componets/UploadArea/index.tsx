@@ -4,21 +4,23 @@ import path from 'path'
 import { remote } from 'electron'
 
 import VideoFormats from '../../models/VideoFormats'
-import { platform } from 'os'
+
+import { DropZone } from '../DropZone'
 
 const fs: typeof fsModule = remote.require('fs')
 const dialog = remote.dialog
 
 const UploadArea = () => {
 
-    const [filePath, setFilePath] = useState('')
+    const [filePath, setFilePath] = useState<string | undefined>('')
 
-
-    const handleUpload = () => {
+    const handleOpenFile = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
 
         //Verificando se é nativo
         if (process.platform !== 'darwin') {
-            console.log(platform)
+            console.log(process.platform)
             dialog.showOpenDialog({
                 title: 'Selecione um video para comprimir',
                 buttonLabel: 'Abrir',
@@ -46,17 +48,23 @@ const UploadArea = () => {
 
             }).catch(err => {
                 console.log(err)
-            });
+            })
         }
     }
 
-
+    const handleDropFile = (e: React.DragEvent) => {
+        e.persist()
+        setFilePath(e.dataTransfer.files.item(0)?.path)
+    }
 
     return (
-        <div id="upload-area">
-            <p>{filePath}</p>
-            <button id="upload" onClick={() => handleUpload()}>Upload File</button>
-        </div>
+        <DropZone
+            id="upload-area"
+            onDrop={e => handleDropFile(e)}
+            onClick={e => handleOpenFile(e)}
+        >
+            <p>{filePath?.split(/(\/|\\)/).pop()}</p>
+        </DropZone>
     )
 }
 
