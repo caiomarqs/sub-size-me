@@ -11,9 +11,13 @@
     "dev:react": "NODE_ENV=development webpack-dev-server --config webpack.react.config.js --mode development",
     "build:electron": "NODE_ENV=production webpack --config webpack.electron.config.js --mode production",
     "build:react": "NODE_ENV=production webpack --config webpack.react.config.js --mode production",
+    "w:build:electron": "webpack --config webpack.electron.config.js --mode production && set NODE_ENV=production ",
+    "w:build:react": "webpack --config webpack.react.config.js --mode production && set NODE_ENV=production ",
+    "w:build": "npm run npm w:run build:react && w:build:electron",
     "build": "npm run build:electron && npm run build:react",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder"
+    "dist": "electron-builder",
+    "builder": "electron-packager . subsizeme --platform=win32 --arch=x64"
   },
   "keywords": [],
   "author": "caiomarqs",
@@ -33,8 +37,7 @@
   "dependencies": {
     "fluent-ffmpeg": "^2.1.2",
     "react": "^16.14.0",
-    "react-dom": "^16.14.0",
-    "react-dropzone": "^11.2.4"
+    "react-dom": "^16.14.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.3",
@@ -52,6 +55,7 @@
     "css-loader": "^5.0.1",
     "electron": "^10.1.5",
     "electron-builder": "^22.9.1",
+    "electron-packager": "^15.1.0",
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^4.5.0",
     "mini-css-extract-plugin": "^1.3.0",

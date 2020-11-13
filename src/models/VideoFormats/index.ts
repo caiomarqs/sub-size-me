@@ -19,8 +19,6 @@ const windowsMedia = new WindowsMedia()
 
 export class VideoFormats {
 
-    // static formats = { avi, flash, mp4, mpeg, mpego, quickTime, windowsMedia }
-
     private static getTypeFormats(videoFormat: IVideoFormat): { name: string, extensions: string[] } {
         return {
             name: videoFormat.name,

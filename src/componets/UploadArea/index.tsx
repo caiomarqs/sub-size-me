@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react'
-import fsModule from 'fs'
-import path from 'path'
 import { remote } from 'electron'
+import fsModule from 'fs'
+
 
 import { VideoFormats } from '../../models/VideoFormats'
 import { VideoFile } from '../../models/VideoFile'
@@ -9,7 +9,6 @@ import { VideoFile } from '../../models/VideoFile'
 import { DropZone } from '../DropZone'
 import { FileContex } from '../../contexts/FileContext'
 import { IFileContex } from '../../contexts/FileContext/interfaces'
-import { type } from 'process'
 import { FileActions } from '../../reducers/actions'
 
 
@@ -22,6 +21,18 @@ const UploadArea = () => {
 
     const [filePath, setFilePath] = useState<string | undefined>('')
     const [draggin, setDraggin] = useState(false)
+
+
+    const handleFile = (filePath: string | undefined) => {
+        const videoFile = new VideoFile(filePath)
+
+        dispatch({
+            type: FileActions.SET_FILE,
+            payload: videoFile
+        })
+
+        setFilePath(videoFile.path)
+    }
 
     const handleOpenFile = (e: React.MouseEvent) => {
         e.preventDefault();
@@ -36,9 +47,9 @@ const UploadArea = () => {
                 filters: VideoFormats.getAllVideoFormatsArray(),
                 properties: ['openFile']
             }).then(file => {
-
                 //Se não for cancelado seta path do arquivo
-                if (!file.canceled) setFilePath(file.filePaths[0].toString())
+                if (!file.canceled)
+                    handleFile(file.filePaths[0].toString())
             }).catch(err => {
                 console.log(err)
             });
@@ -52,9 +63,8 @@ const UploadArea = () => {
                 properties: ['openFile', 'openDirectory']
 
             }).then(file => {
-
-                if (!file.canceled) setFilePath(file.filePaths[0].toString())
-
+                if (!file.canceled)
+                    handleFile(file.filePaths[0].toString())
             }).catch(err => {
                 console.log(err)
             })
@@ -64,17 +74,7 @@ const UploadArea = () => {
     const handleDropFile = (e: React.DragEvent) => {
         e.persist()
         setDraggin(false)
-
-        const videoFile = new VideoFile(e.dataTransfer.files.item(0)?.path)
-
-        dispatch({
-            type: FileActions.SET_FILE,
-            payload: videoFile
-        })
-
-        console.log(videoFile.path)
-
-        setFilePath(videoFile.path)
+        handleFile(e.dataTransfer.files.item(0)?.path)
     }
 
     return (
@@ -85,7 +85,6 @@ const UploadArea = () => {
             onDragOver={_ => setDraggin(true)}
             onDragLeave={_ => setDraggin(false)}
         >
-            {/* <p>{filePath?.split(/(\/|\\)/).pop()}</p> */}
             <p>{fileState.videoFile.path}</p>
             <p>{draggin ? 'true' : 'false'}</p>
         </DropZone>

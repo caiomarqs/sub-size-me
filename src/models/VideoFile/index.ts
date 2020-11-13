@@ -3,13 +3,19 @@ import { VideoFormats } from '../VideoFormats'
 
 export class VideoFile implements IVideoFile {
     name: string | undefined = ""
-    path: string | undefined = ""
+    path: string = ""
     type: string | undefined = ""
+    completeName: string | undefined = ""
 
     constructor(relativePath?: string | undefined) {
-        this.name = relativePath?.split(/(\/|\\)/).pop()
-        this.path = relativePath
-        this.type = this.isAcceptableVideoFile(relativePath?.split(/\./).pop()) ? relativePath?.split(/\./).pop() : ''
+        
+        if (this.isAcceptableVideoFile(relativePath?.split(/\./).pop()) && relativePath) {
+            this.completeName = relativePath.split(/(\/|\\)/).pop()
+            this.name = relativePath.split(/(\/|\\)/).pop()?.split(/\./).slice(0, -1).join("")
+            this.path = relativePath
+            this.type = relativePath.split(/\./).pop()
+        }
+
     }
 
     isAcceptableVideoFile(format: string | undefined) {
@@ -20,6 +26,16 @@ export class VideoFile implements IVideoFile {
         } else {
             return false
         }
+    }
+
+    getPathWithoutFileName() {
+        if (this.path !== undefined) {
+            return this.path
+                .split(/(\/|\\)/)
+                .slice(0, -1)
+                .join("")
+        }
+        return ""
     }
 
     getInstance() {
