@@ -13,7 +13,7 @@
     "build:react": "NODE_ENV=production webpack --config webpack.react.config.js --mode production",
     "w:build:electron": "webpack --config webpack.electron.config.js --mode production && set NODE_ENV=production ",
     "w:build:react": "webpack --config webpack.react.config.js --mode production && set NODE_ENV=production ",
-    "w:build": "npm run npm w:run build:react && w:build:electron",
+    "w:build": "concurrently \"npm run w:build:react\" \"npm run w:build:electron\"",
     "build": "npm run build:electron && npm run build:react",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
