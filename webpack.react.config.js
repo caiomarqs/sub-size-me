@@ -1,6 +1,7 @@
 const path = require("path")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const { DefinePlugin } = require("webpack");
 
 module.exports = {
   resolve: {
@@ -23,6 +24,7 @@ module.exports = {
       use: [
         'style-loader',
         'css-loader',
+        'resolve-url-loader',
         {
           loader: "sass-loader",
           options: {
@@ -38,6 +40,29 @@ module.exports = {
           loader: 'file-loader',
         },
       ],
+    },
+    {
+      test: /\.svg$/,
+      use: [
+        {
+          loader: 'svg-url-loader',
+          options: {
+            limit: 10000,
+          },
+        },
+      ],
+    },
+    {
+      test: /\.(woff(2)?|ttf|eot)(\?v=\d+\.\d+\.\d+)?$/,
+      use: [
+        {
+          loader: 'file-loader',
+          options: {
+            name: '[name].[ext]',
+            outputPath: 'fonts/'
+          }
+        }
+      ]
     }],
   },
   devServer: {
@@ -57,6 +82,9 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: '[name].css',
       chunkFilename: '[id].css'
+    }),
+    new DefinePlugin({
+      'process.env.FLUENTFFMPEG_COV': false
     })
   ],
 };

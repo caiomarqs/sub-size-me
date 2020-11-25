@@ -4,20 +4,22 @@ interface IDropZone {
     children: ReactNode | JSX.Element,
     id: string
     onDrop: DragEventHandler<HTMLDivElement>
-    onClick: MouseEventHandler<HTMLDivElement>
+    onClick?: MouseEventHandler<HTMLDivElement>
+    onDragOver?: DragEventHandler<HTMLDivElement>
+    onDragLeave?: DragEventHandler<HTMLDivElement>
+    onDragEnd?: DragEventHandler<HTMLDivElement>
 }
 
 export const DropZone = ({ children, ...props }: IDropZone) => {
+    
     const onDragEnter = (e: Event) => {
         e.stopPropagation();
         e.preventDefault();
-        return false;
     }
 
     const onDragOver = (e: Event) => {
         e.preventDefault();
         e.stopPropagation();
-        return false;
     }
 
     const onDragLeave = (e: Event) => {
@@ -48,7 +50,7 @@ export const DropZone = ({ children, ...props }: IDropZone) => {
     }, [])
 
     return (
-        <div {...props}>
+        <div {...props} >
             {children}
         </div>
     )

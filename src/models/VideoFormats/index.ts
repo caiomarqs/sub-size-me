@@ -17,9 +17,7 @@ const mpego = new MPEGO()
 const quickTime = new QuickTime()
 const windowsMedia = new WindowsMedia()
 
-export default class VideoFormats {
-
-    // static formats = { avi, flash, mp4, mpeg, mpego, quickTime, windowsMedia }
+export class VideoFormats {
 
     private static getTypeFormats(videoFormat: IVideoFormat): { name: string, extensions: string[] } {
         return {
@@ -66,5 +64,9 @@ export default class VideoFormats {
         ]
     }
 
+    static getAllVideoAccetableFormats(): Array<string> {
+        const { extensions } = this.getAllTypeFormats([avi, flash, mp4, mkv, mpeg, mpego, quickTime, windowsMedia]);
+        return extensions
+    }
 }
 
