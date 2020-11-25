@@ -2,11 +2,11 @@ import React, { useContext, useState } from 'react'
 import { remote } from 'electron'
 import fsModule from 'fs'
 
-
 import { VideoFormats } from '../../models/VideoFormats'
 import { VideoFile } from '../../models/VideoFile'
 
 import { DropZone } from '../DropZone'
+import { SimpleButton } from '../SimpleButton'
 import { FileContex } from '../../contexts/FileContext'
 import { IFileContex } from '../../contexts/FileContext/interfaces'
 import { FileActions } from '../../reducers/actions'
@@ -81,12 +81,21 @@ const UploadArea = () => {
         <DropZone
             id="upload-area"
             onDrop={e => handleDropFile(e)}
-            onClick={e => handleOpenFile(e)}
             onDragOver={_ => setDraggin(true)}
             onDragLeave={_ => setDraggin(false)}
         >
-            <p>{fileState.videoFile.path}</p>
-            <p>{draggin ? 'true' : 'false'}</p>
+            <img src={require('../../assets/img/drop-area.svg')} />
+            <div className="drop-container">
+
+                <div className="drop-content">
+                    <p>Arraste e solte o arquivo!</p>
+                    <span>ou</span>
+                    <SimpleButton
+                        onClick={e => handleOpenFile(e)}
+                        title="Selecione o Arquivo"
+                    />
+                </div>
+            </div>
         </DropZone>
     )
 }

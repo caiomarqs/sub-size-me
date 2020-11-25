@@ -4,7 +4,7 @@ interface IDropZone {
     children: ReactNode | JSX.Element,
     id: string
     onDrop: DragEventHandler<HTMLDivElement>
-    onClick: MouseEventHandler<HTMLDivElement>
+    onClick?: MouseEventHandler<HTMLDivElement>
     onDragOver?: DragEventHandler<HTMLDivElement>
     onDragLeave?: DragEventHandler<HTMLDivElement>
     onDragEnd?: DragEventHandler<HTMLDivElement>

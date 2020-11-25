@@ -1,23 +1,42 @@
 #upload-area{
-    h1{
-        margin: 0;
+    @include noselect();
+    height:  20rem;
+    position: relative;
+    
+    img{
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 100%;
+        z-index: 0;
     }
 
-    p{
-        color: $B-000;
-    }
-
-    height:  16rem;
-    background-color: $primary;
-
-    #file-region-input{
-        display: none;
-    }
-
-    .file-region{
+    .drop-container{
+        position: absolute;
+        top: 0;
+        right: 0;
         width: 100%;
         height: 100%;
-        display: block;
-        background-color: rgba($color: #000000, $alpha: .5);
+        display: grid;
+        place-items: center;
+
+        
+        .drop-content{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: $B-000;
+
+            p{
+                @include bodytext();
+                margin-bottom: 0.375rem;
+            }
+    
+            > span{
+                @include caption();
+                margin-bottom: 0.375rem;
+            }
+        }
+        
     }
 }

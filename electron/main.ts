@@ -4,10 +4,10 @@ import * as url from 'url'
 
 const createWindow = () => {
     const win = new BrowserWindow({
-        width: 652,
+        width: 600,
         height: 600,
-        maxWidth: 652,
-        minWidth: 326,
+        maxWidth: 600,
+        minWidth: 600,
         frame: false,
         webPreferences: {
             nodeIntegration: true, 
