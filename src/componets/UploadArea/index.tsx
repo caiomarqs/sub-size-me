@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { remote } from 'electron'
+import { OpenDialogOptions, remote } from 'electron'
 import fsModule from 'fs'
 
 import { VideoFormats } from '../../models/VideoFormats'
@@ -17,64 +17,65 @@ const dialog = remote.dialog
 
 const UploadArea = () => {
 
-    const { fileState, dispatch }: IFileContex = useContext(FileContex)
+    const { dispatch }: IFileContex = useContext(FileContex)
 
-    const [filePath, setFilePath] = useState<string | undefined>('')
     const [draggin, setDraggin] = useState(false)
+    const [openFile, setOpenFile] = useState(false)
 
 
-    const handleFile = (filePath: string | undefined) => {
-        const videoFile = new VideoFile(filePath)
+    const handleFile = (filePath: string | undefined, size?: number) => {
+        const videoFile = new VideoFile(filePath, size)
 
         dispatch({
             type: FileActions.SET_FILE,
             payload: videoFile
         })
 
-        setFilePath(videoFile.path)
     }
 
     const handleOpenFile = (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
-
-        //Verificando se é nativo
-        if (process.platform !== 'darwin') {
-            console.log(process.platform)
-            dialog.showOpenDialog({
-                title: 'Selecione um video para comprimir',
-                buttonLabel: 'Abrir',
-                filters: VideoFormats.getAllVideoFormatsArray(),
-                properties: ['openFile']
-            }).then(file => {
-                //Se não for cancelado seta path do arquivo
-                if (!file.canceled)
-                    handleFile(file.filePaths[0].toString())
-            }).catch(err => {
-                console.log(err)
-            });
+        setOpenFile(true)
+        
+        let properties: OpenDialogOptions= {
+            title: 'Selecione um video para comprimir',
+            buttonLabel: 'Abrir',
+            filters: VideoFormats.getAllVideoFormatsArray(),
+            properties: ['openFile']
         }
-        else {
-            // If the platform is 'darwin' (macOS) 
-            dialog.showOpenDialog({
+
+        //on macos
+        if (process.platform === 'darwin') {
+            properties = {
                 title: 'Select the File to be uploaded',
                 buttonLabel: 'Abrir',
                 filters: VideoFormats.getAllVideoFormatsArray(),
                 properties: ['openFile', 'openDirectory']
-
-            }).then(file => {
-                if (!file.canceled)
-                    handleFile(file.filePaths[0].toString())
-            }).catch(err => {
-                console.log(err)
-            })
+    
+            }
         }
+
+        dialog.showOpenDialog(properties).then(file => {
+            if (!file.canceled) {
+                const path = (file.filePaths[0].toString())
+                const size = fs.statSync(path).size
+                handleFile(path, size)
+            }
+            setOpenFile(false)
+
+        }).catch(err => {
+            console.log(err)
+        });
     }
 
     const handleDropFile = (e: React.DragEvent) => {
         e.persist()
         setDraggin(false)
-        handleFile(e.dataTransfer.files.item(0)?.path)
+        handleFile(
+            e.dataTransfer.files.item(0)?.path,
+            e.dataTransfer.files.item(0)?.size,
+        )
     }
 
     return (
@@ -91,7 +92,7 @@ const UploadArea = () => {
                     <p>Arraste e solte o arquivo!</p>
                     <span>ou</span>
                     <SimpleButton
-                        onClick={e => handleOpenFile(e)}
+                        onClick={e => !openFile ? handleOpenFile(e) : () => { }}
                         title="Selecione o Arquivo"
                     />
                 </div>

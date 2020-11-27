@@ -1,0 +1,25 @@
+#target-info-section{
+    width: 100%;
+    margin-top: 2rem;
+    display: flex;
+
+     .target-size, .target-info{
+        flex: 1;
+
+        &:last-of-type{
+            padding-left: 0.5rem;
+        }
+
+        h3{
+            @include noselect();
+            @include subtitle();
+            color: $C-200;
+            margin-bottom: 0.5rem;
+        }
+
+        p{
+            @include bodytext();
+            color: $C-200;
+        }
+    }
+}

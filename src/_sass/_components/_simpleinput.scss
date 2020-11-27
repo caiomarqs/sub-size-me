@@ -1,0 +1,13 @@
+.simple-input{
+    background-color: $N-500;
+    min-width: 10.5rem;
+    height: 2rem;
+    border-radius: 0.25rem;
+    color: $B-000;
+    @include bodytext();
+    padding: 0 0.5rem;
+
+    &:focus{
+        outline: none;
+    }
+}

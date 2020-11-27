@@ -39,7 +39,7 @@
 @mixin bodytext {
     font-family: "Roboto", sans-serif;
     font-weight: 400;
-    font-size: 14pt;
+    font-size: 12pt;
     line-height: 16.41pt;
 }
 
@@ -53,8 +53,9 @@
 @mixin subtitle {
     font-family: "Roboto", sans-serif;
     font-weight: 700;
-    font-size: 12pt;
+    font-size: 10pt;
     line-height: 14.1pt;
+    text-transform: uppercase;
 }
 
 @mixin caption {

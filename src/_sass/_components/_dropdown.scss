@@ -1,0 +1,14 @@
+.drop-down{
+    background-color: transparent;
+    color: $C-200;
+    outline: none;
+    margin-left: 0.5rem;
+    @include bodytext();
+
+    option{
+        background-color: $N-200;
+        border: none;
+        border-radius: 4px;
+    }
+
+}

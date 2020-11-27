@@ -1,8 +1,11 @@
 import React from 'react'
 
 import { UploadArea } from '../componets/UploadArea'
+import { FileInfoSection } from '../componets/FileInfoSection'
 import { CompressButton } from '../componets/CompressButton'
 import { FileProvider } from '../contexts/FileContext'
+import { TargetInfoSection } from '../componets/TargetInfoSection'
+import { TargetProvider } from '../contexts/TargetContext'
 
 
 const Principal = () => {
@@ -10,7 +13,11 @@ const Principal = () => {
         <FileProvider>
             <div id='principal-container'>
                 <UploadArea />
-                <CompressButton />
+                <FileInfoSection />
+                <TargetProvider>
+                    <TargetInfoSection />
+                    <CompressButton />
+                </TargetProvider>
             </div>
         </FileProvider>
     )

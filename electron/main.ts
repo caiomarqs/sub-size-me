@@ -5,7 +5,7 @@ import * as url from 'url'
 const createWindow = () => {
     const win = new BrowserWindow({
         width: 600,
-        height: 600,
+        minHeight: 642,
         maxWidth: 600,
         minWidth: 600,
         frame: false,

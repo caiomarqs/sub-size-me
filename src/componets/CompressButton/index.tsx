@@ -1,30 +1,42 @@
-import React, { useContext, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import ffmpeg from 'fluent-ffmpeg'
 import { remote } from 'electron'
 import fsModule from 'fs'
 
+import { SimpleButton } from '../SimpleButton'
 import { FileContex } from '../../contexts/FileContext'
+import { TargetContext } from '../../contexts/TargetContext'
 import { AudioBitRate } from '../../models/AudioBitRate'
+import { VideoFile } from '../../models/VideoFile'
 
 const fs: typeof fsModule = remote.require('fs')
 
 const CompressButton = () => {
 
     const { fileState } = useContext(FileContex)
-    const { videoFile } = fileState
+    const { targetState } = useContext(TargetContext)
 
+    const [videoFile, setVideoFile] = useState<VideoFile>(fileState.videoFile)
     const [compress, setCompress] = useState<null | boolean>(null)
-    const [target, setTarget] = useState('')
+
+
+    useEffect(() => {
+        setVideoFile(fileState.videoFile)
+    }, [fileState.videoFile])
+
 
     const handleComprimir = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault()
 
-        ffmpeg.ffprobe(videoFile.path, (err, data) => {
-            if (data.format.duration && target !== '') {
-                const seg = Math.round(data.format.duration)
-                console.log(seg)
 
-                const bitRateTotal = (Number.parseInt(target) * 8 * 1024) / seg
+        ffmpeg.ffprobe(videoFile.path, (err, data) => {
+
+            if (data.format.duration && data.streams[0].avg_frame_rate && targetState.targetFile.sizeNumber !== 0) {
+                const seg = data.format.duration
+                const frameRate = data.streams[0].avg_frame_rate.toString().split(/(\/)/)[0]
+
+                //um kbyte é 8 kbit 
+                const bitRateTotal = (targetState.targetFile.getSizeKBit() / seg) - (Number.parseInt(frameRate) * .2) - 1
                 const audioBitRate = new AudioBitRate().getNearBitRate(Math.round(bitRateTotal))
                 const videoBitRate = bitRateTotal - audioBitRate
 
@@ -56,7 +68,13 @@ const CompressButton = () => {
                                 })
                                 .on('end', _ => {
                                     setCompress(false)
-                                    fs.unlinkSync(`${videoFile.getPathWithoutFileName()}temp_${videoFile.name}.mp4`)
+
+                                    const tempFile = `${videoFile.getPathWithoutFileName()}temp_${videoFile.name}.mp4`
+
+                                    if(fs.existsSync(tempFile)){
+                                        fs.unlinkSync(tempFile)
+                                    }
+                                    
                                 })
                                 .saveToFile(`${videoFile.getPathWithoutFileName()}compress_${videoFile.name}.mp4`)
                                 .run();
@@ -69,15 +87,12 @@ const CompressButton = () => {
                 alert('insira um target')
             }
         })
-
-        // console.log(videoFile.type)
     }
 
     return (
-        <>
-            <input type="text" onChange={(e) => setTarget(e.target.value)} />
-            <button type="button" onClick={(e) => handleComprimir(e)} >Comprimir</button>
-        </>
+        <div className="compress-button-container">
+            <SimpleButton onClick={(e) => handleComprimir(e)} title="Comprimir" />
+        </div>
     )
 }
 
