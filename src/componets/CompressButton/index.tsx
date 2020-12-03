@@ -30,18 +30,18 @@ const CompressButton = () => {
     const handleComprimir = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault()
 
-        if(videoFile.path === "") {
+        if (videoFile.path === "") {
             alert("Selecione ou arraste um arquivo!!")
             return
         }
-        if(targetState.targetFile.sizeNumber === 0){
-            alert("Insira para o tamanho quer comprimir o video!!")
-            return  
+        if (targetState.targetFile.sizeNumber === 0) {
+            alert("Insira o tamanho quer comprimir o video!!")
+            return
         }
-        
+
         ffmpeg.ffprobe(videoFile.path, (err, data) => {
-            
-            if(err){
+
+            if (err) {
                 console.log(err)
                 return
             }
@@ -62,18 +62,19 @@ const CompressButton = () => {
                         .addOption(['-pass', '1'])
                         .addOption(['-f', 'null NUL'])
                         .addOption(['-y'])
+                        .addOption(['-vsync cfr'])
                         .on('error', err => {
                             console.log(err);
                         })
                         .on('end', _ => {
                             ffmpeg(videoFile.path)
-                                .addOptions(["-pass", "2"])
                                 .videoCodec('libx264')
                                 .videoBitrate(`${videoBitRate}k`)
                                 .audioCodec('aac')
                                 .audioBitrate(`${audioBitRate}k`)
-                                .addOption(['-y'])
                                 .format('mp4')
+                                .addOptions(["-pass", "2"])
+                                .addOption(['-y'])
                                 .on('error', err => {
                                     console.log(err);
                                 })
@@ -83,7 +84,7 @@ const CompressButton = () => {
                                     if (fs.existsSync(tempFile)) {
                                         fs.unlinkSync(tempFile)
 
-                                        if(confirm(`Seu aqruivo foi salvo como: compress_${videoFile.name}.mp4\nDeseja abrir o local do arqivo?`)){
+                                        if (confirm(`Seu aqruivo foi salvo como: compress_${videoFile.name}.mp4\nDeseja abrir o local do arqivo?`)) {
                                             process.exec(`start "" "${videoFile.getPathWithoutFileName()}"`);
                                         }
                                     }

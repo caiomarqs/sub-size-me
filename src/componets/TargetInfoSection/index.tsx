@@ -20,11 +20,15 @@ const TargetInfoSection = () => {
     const [targetUnit, setTargetUnit] = useState(sizesOptions[0].value)
 
     const handleTargetSize = (e: React.ChangeEvent<HTMLInputElement>) => {
+
+        let actualTargetSize = e.target.value
+        if(e.target.value === "") actualTargetSize = '0'
+
         setTargetSize(e.target.value)
 
         dispatch({
             type: TargetActions.SET_TARGET,
-            payload: new TargetFile(Number.parseInt(e.target.value), targetUnit)
+            payload: new TargetFile(Number.parseInt(actualTargetSize), targetUnit)
         })
     }
 

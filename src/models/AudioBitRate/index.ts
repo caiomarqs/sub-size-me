@@ -12,8 +12,9 @@ export class AudioBitRate {
             pound = .17
         }
 
+        console.log("Pound: ", pound)
+
         return this.allBitRates.reduce((prev, acc) => {
-            console.log("Pound: ", pound)
             const bitRatePound = bitRate * pound
             return (Math.abs(acc - bitRatePound) < Math.abs(prev - bitRatePound)) ? acc : prev
         })
