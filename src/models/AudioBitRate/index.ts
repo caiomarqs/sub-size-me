@@ -1,23 +1,20 @@
 export class AudioBitRate {
-    b320 = 320
-    b192 = 192
-    b128 = 128
-    b96 = 96
-    b32 = 32
-    b16 = 16
 
-    allBitRate = [
-        this.b16,
-        this.b32,
-        this.b96,
-        this.b128,
-        this.b192,
-        this.b320
-    ]
+    static allBitRates = [16, 32, 48, 64, 80, 96, 112, 160, 192, 224, 320]
 
-    getNearBitRate(audioBitRate: number) {
-        return this.allBitRate.reduce((prev, acc) => {
-            const bitRatePound = audioBitRate * .2
+    static getNearBitRate(bitRate: number) {
+        let pound = .225
+
+        if (bitRate > 530) {
+            pound = .195
+        }
+        if (bitRate > 1065){
+            pound = .17
+        }
+
+        return this.allBitRates.reduce((prev, acc) => {
+            console.log("Pound: ", pound)
+            const bitRatePound = bitRate * pound
             return (Math.abs(acc - bitRatePound) < Math.abs(prev - bitRatePound)) ? acc : prev
         })
     }

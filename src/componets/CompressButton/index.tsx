@@ -17,7 +17,7 @@ const CompressButton = () => {
     const { targetState } = useContext(TargetContext)
 
     const [videoFile, setVideoFile] = useState<VideoFile>(fileState.videoFile)
-    const [compress, setCompress] = useState<null | boolean>(null)
+    const [compressPercent, setCompressPercent] = useState<null | number>(null)
 
 
     useEffect(() => {
@@ -37,20 +37,16 @@ const CompressButton = () => {
 
                 //um kbyte é 8 kbit 
                 const bitRateTotal = (targetState.targetFile.getSizeKBit() / seg) - (Number.parseInt(frameRate) * .2) - 1
-                const audioBitRate = new AudioBitRate().getNearBitRate(Math.round(bitRateTotal))
+                const audioBitRate = AudioBitRate.getNearBitRate(Math.round(bitRateTotal))
                 const videoBitRate = bitRateTotal - audioBitRate
 
-                console.log(bitRateTotal)
-                console.log(audioBitRate)
-                console.log(videoBitRate)
-
-
                 if (videoFile.path && videoFile.type && videoFile.name) {
-                    const first = ffmpeg(videoFile.path)
+                    ffmpeg(videoFile.path)
                         .videoCodec('libx264')
                         .videoBitrate(`${videoBitRate}k`)
                         .addOption(['-pass', '1'])
                         .addOption(['-f', 'null NUL'])
+                        .addOption(['-y'])
                         .on('error', err => {
                             console.log(err);
                         })
@@ -67,20 +63,25 @@ const CompressButton = () => {
                                     console.log(err);
                                 })
                                 .on('end', _ => {
-                                    setCompress(false)
-
                                     const tempFile = `${videoFile.getPathWithoutFileName()}temp_${videoFile.name}.mp4`
 
-                                    if(fs.existsSync(tempFile)){
+                                    if (fs.existsSync(tempFile)) {
                                         fs.unlinkSync(tempFile)
                                     }
-                                    
+
+                                    setCompressPercent(null)
                                 })
                                 .saveToFile(`${videoFile.getPathWithoutFileName()}compress_${videoFile.name}.mp4`)
                                 .run();
+
+                            setCompressPercent(100)
+                        })
+                        .on('progress', (progress) => {
+                            //TODO - Fix compress sometimes nubmer come backs
+                            setCompressPercent(+Math.round(progress.percent))
                         })
                         .saveToFile(`${videoFile.getPathWithoutFileName()}temp_${videoFile.name}.mp4`)
-                    first.run()
+                        .run()
                 }
             }
             else {
@@ -91,7 +92,23 @@ const CompressButton = () => {
 
     return (
         <div className="compress-button-container">
-            <SimpleButton onClick={(e) => handleComprimir(e)} title="Comprimir" />
+            {
+                compressPercent === null
+                    ?
+                    <SimpleButton onClick={(e) => handleComprimir(e)} title="Comprimir" />
+                    :
+                    <div className="status-container">
+
+                        <p>Status: {compressPercent}%</p>
+
+                        <div className="status-bar">
+                            <div
+                                className="status-progres"
+                                style={{ width: compressPercent === null ? '0%' : `${compressPercent}%` }}
+                            />
+                        </div>
+                    </div>
+            }
         </div>
     )
 }
