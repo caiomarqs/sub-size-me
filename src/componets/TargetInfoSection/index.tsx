@@ -47,6 +47,7 @@ const TargetInfoSection = () => {
                     type="number"
                     value={targetSize}
                     min="0"
+                    id="target-size-input"
                 />
                 <DropDown
                     options={sizesOptions}
@@ -55,7 +56,7 @@ const TargetInfoSection = () => {
                 />
             </div>
             <div className="target-info">
-                <h3>Qualidade</h3>
+                {/* <h3>Qualidade</h3> */}
             </div>
         </section>
     )

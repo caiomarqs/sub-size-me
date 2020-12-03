@@ -11,13 +11,12 @@ import { FileContex } from '../../contexts/FileContext'
 import { IFileContex } from '../../contexts/FileContext/interfaces'
 import { FileActions } from '../../reducers/actions'
 
-
 const fs: typeof fsModule = remote.require('fs')
 const dialog = remote.dialog
 
 const UploadArea = () => {
 
-    const { dispatch }: IFileContex = useContext(FileContex)
+    const { fileState, dispatch }: IFileContex = useContext(FileContex)
 
     const [draggin, setDraggin] = useState(false)
     const [openFile, setOpenFile] = useState(false)
@@ -30,6 +29,8 @@ const UploadArea = () => {
             type: FileActions.SET_FILE,
             payload: videoFile
         })
+
+        document.getElementById('target-size-input')?.focus()
 
     }
 
@@ -93,7 +94,7 @@ const UploadArea = () => {
                     <span>ou</span>
                     <SimpleButton
                         onClick={e => !openFile ? handleOpenFile(e) : () => { }}
-                        title="Selecione o Arquivo"
+                        title={fileState.videoFile.completeName === "" ? "Selecione Arquivo" : "Mude Arquivo"}
                     />
                 </div>
             </div>

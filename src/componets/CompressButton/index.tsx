@@ -1,7 +1,8 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import ffmpeg from 'fluent-ffmpeg'
 import { remote } from 'electron'
 import fsModule from 'fs'
+import childProcessModule from 'child_process'
 
 import { SimpleButton } from '../SimpleButton'
 import { FileContex } from '../../contexts/FileContext'
@@ -10,6 +11,7 @@ import { AudioBitRate } from '../../models/AudioBitRate'
 import { VideoFile } from '../../models/VideoFile'
 
 const fs: typeof fsModule = remote.require('fs')
+const process: typeof childProcessModule = remote.require('child_process')
 
 const CompressButton = () => {
 
@@ -28,10 +30,23 @@ const CompressButton = () => {
     const handleComprimir = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault()
 
-
+        if(videoFile.path === "") {
+            alert("Selecione ou arraste um arquivo!!")
+            return
+        }
+        if(targetState.targetFile.sizeNumber === 0){
+            alert("Insira para o tamanho quer comprimir o video!!")
+            return  
+        }
+        
         ffmpeg.ffprobe(videoFile.path, (err, data) => {
+            
+            if(err){
+                console.log(err)
+                return
+            }
 
-            if (data.format.duration && data.streams[0].avg_frame_rate && targetState.targetFile.sizeNumber !== 0) {
+            if (data.format.duration && data.streams[0].avg_frame_rate) {
                 const seg = data.format.duration
                 const frameRate = data.streams[0].avg_frame_rate.toString().split(/(\/)/)[0]
 
@@ -67,6 +82,10 @@ const CompressButton = () => {
 
                                     if (fs.existsSync(tempFile)) {
                                         fs.unlinkSync(tempFile)
+
+                                        if(confirm(`Seu aqruivo foi salvo como: compress_${videoFile.name}.mp4\nDeseja abrir o local do arqivo?`)){
+                                            process.exec(`start "" "${videoFile.getPathWithoutFileName()}"`);
+                                        }
                                     }
 
                                     setCompressPercent(null)
@@ -83,9 +102,6 @@ const CompressButton = () => {
                         .saveToFile(`${videoFile.getPathWithoutFileName()}temp_${videoFile.name}.mp4`)
                         .run()
                 }
-            }
-            else {
-                alert('insira um target')
             }
         })
     }

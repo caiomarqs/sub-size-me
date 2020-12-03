@@ -5,7 +5,8 @@ interface ISimpleInput {
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void,
     value: string,
     type?: string
-    min?: string
+    min?: string,
+    id?: string
 }
 
 const SimpleInput = ({ onChange = () => { }, value, type, min,  ...props }: ISimpleInput) => {

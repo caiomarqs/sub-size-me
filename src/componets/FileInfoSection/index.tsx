@@ -11,7 +11,7 @@ const FileInfoSection = () => {
         <section id="file-info-section">
             <div className="file-name">
                 <h3>Nome do arquivo</h3>
-                <p>{fileState.videoFile.completeName}</p>
+                <p>{fileState.videoFile.completeName || "-"}</p>
             </div>
             <div className="file-size">
                 <h3>Tamanho atual</h3>
