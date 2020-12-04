@@ -49,7 +49,6 @@ const WindowBar = ({ Icon, ...props }: React.PropsWithChildren<IWindowBarProps>)
         win.on('maximize', clearHover)
         win.on('unmaximize', clearHover)
         win.on('restore', clearHover)
-        console.log(Icon)
         return () => {
             //Clear all listeners when componet destroy
             win.removeAllListeners('minimize')

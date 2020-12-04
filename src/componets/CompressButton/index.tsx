@@ -11,7 +11,7 @@ import { AudioBitRate } from '../../models/AudioBitRate'
 import { VideoFile } from '../../models/VideoFile'
 
 const fs: typeof fsModule = remote.require('fs')
-const process: typeof childProcessModule = remote.require('child_process')
+const childProcess: typeof childProcessModule = remote.require('child_process')
 
 const CompressButton = () => {
 
@@ -55,14 +55,23 @@ const CompressButton = () => {
                 const audioBitRate = AudioBitRate.getNearBitRate(Math.round(bitRateTotal))
                 const videoBitRate = bitRateTotal - audioBitRate
 
+                //TODO - Maybe on unix systems has a root permition, because the local where log file was save
                 if (videoFile.path && videoFile.type && videoFile.name) {
+
+                    //In Windows Systems
+                    if(!fs.existsSync(`${process.env.APPDATA}\\SubSizeMe`)){
+                        fs.mkdirSync(`${process.env.APPDATA}\\SubSizeMe`);
+                        fs.mkdirSync(`${process.env.APPDATA}\\SubSizeMe\\Logs`);
+                    }
+
                     ffmpeg(videoFile.path)
                         .videoCodec('libx264')
                         .videoBitrate(`${videoBitRate}k`)
                         .addOption(['-pass', '1'])
-                        .addOption(['-f', 'null NUL'])
+                        .addOption([`-f`, 'null', 'NUL'])
+                        // .addOption(['-passlogfile', `${process.env.APPDATA}\\SubSizeMe\\Logs\\ffmpeg2pass-${Math.random()}`])
+                        .addOption(['-vsync', 'cfr'])
                         .addOption(['-y'])
-                        .addOption(['-vsync cfr'])
                         .on('error', err => {
                             console.log(err);
                         })
@@ -85,7 +94,7 @@ const CompressButton = () => {
                                         fs.unlinkSync(tempFile)
 
                                         if (confirm(`Seu aqruivo foi salvo como: compress_${videoFile.name}.mp4\nDeseja abrir o local do arqivo?`)) {
-                                            process.exec(`start "" "${videoFile.getPathWithoutFileName()}"`);
+                                            childProcess.exec(`start "" "${videoFile.getPathWithoutFileName()}"`);
                                         }
                                     }
 

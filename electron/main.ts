@@ -10,7 +10,7 @@ const createWindow = () => {
         minWidth: 600,
         frame: false,
         webPreferences: {
-            nodeIntegration: true, 
+            nodeIntegration: true,
             nodeIntegrationInWorker: true,
             backgroundThrottling: false,
             enableRemoteModule: true
@@ -22,7 +22,8 @@ const createWindow = () => {
 
     if (process.env.NODE_ENV === 'development') {
         win.loadURL(`http://localhost:4000`);
-    } else {
+    }
+    else {
         win.loadURL(
             url.format({
                 pathname: path.join(__dirname, '../dist/index.html'),

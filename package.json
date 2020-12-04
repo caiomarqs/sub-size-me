@@ -7,6 +7,10 @@
     "w:dev:electron": "webpack --config webpack.electron.config.js --mode development && set NODE_ENV=development && electron .",
     "w:dev:react": "webpack serve --config webpack.react.config.js --mode development && set NODE_ENV=development",
     "w:dev": "concurrently \"npm run w:dev:react\" \"npm run w:dev:electron\"",
+    "w:build:electron": "set NODE_ENV=production && webpack --config webpack.electron.config.js --mode production",
+    "w:build:react": "set NODE_ENV=production && webpack --config webpack.react.config.js --mode production",
+    "w:build": "npm run w:build:electron && npm run w:build:react && electron-packager . subsizeme --platform=win32 --arch=x64 --overwrite",
+    "w:packger": "npm run w:build && node build-installer.js",
     "dev:electron": "NODE_ENV=development webpack --config webpack.electron.config.js --mode development && electron .",
     "dev:react": "NODE_ENV=development webpack serve --config webpack.react.config.js --mode development",
     "dev": "concurrently \"npm run dev:react\" \"npm run dev:electron\"",
@@ -14,8 +18,7 @@
     "build:react": "NODE_ENV=production webpack --config webpack.react.config.js --mode production",
     "build": "npm npm run build:react && run build:electron",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder",
-    "builder": "electron-packager . subsizeme --platform=win32 --arch=x64"
+    "dist": "electron-builder"
   },
   "keywords": [],
   "author": "caiomarqs",
@@ -33,7 +36,9 @@
     }
   },
   "dependencies": {
+    "child-process": "^1.0.2",
     "fluent-ffmpeg": "^2.1.2",
+    "fs": "0.0.1-security",
     "react": "^16.14.0",
     "react-dom": "^16.14.0"
   },
@@ -54,6 +59,7 @@
     "electron": "^10.1.5",
     "electron-builder": "^22.9.1",
     "electron-packager": "^15.1.0",
+    "electron-wix-msi": "^3.0.4",
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^4.5.0",
     "mini-css-extract-plugin": "^1.3.0",

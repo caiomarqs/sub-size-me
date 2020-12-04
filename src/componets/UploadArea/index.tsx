@@ -94,7 +94,7 @@ const UploadArea = () => {
                     <span>ou</span>
                     <SimpleButton
                         onClick={e => !openFile ? handleOpenFile(e) : () => { }}
-                        title={fileState.videoFile.completeName === "" ? "Selecione Arquivo" : "Mude Arquivo"}
+                        title={fileState.videoFile.completeName === "" ? "Selecione Arquivo" : "Mude o Arquivo"}
                     />
                 </div>
             </div>
@@ -103,4 +103,3 @@ const UploadArea = () => {
 }
 
 export { UploadArea }
-
