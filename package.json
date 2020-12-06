@@ -10,7 +10,7 @@
     "w:build:electron": "set NODE_ENV=production && webpack --config webpack.electron.config.js --mode production",
     "w:build:react": "set NODE_ENV=production && webpack --config webpack.react.config.js --mode production",
     "w:build": "npm run w:build:electron && npm run w:build:react && electron-packager . subsizeme --platform=win32 --arch=x64 --overwrite",
-    "w:packger": "npm run w:build && node build-installer.js",
+    "w:packger": "npm run w:build && node win-build.js",
     "dev:electron": "NODE_ENV=development webpack --config webpack.electron.config.js --mode development && electron .",
     "dev:react": "NODE_ENV=development webpack serve --config webpack.react.config.js --mode development",
     "dev": "concurrently \"npm run dev:react\" \"npm run dev:electron\"",
